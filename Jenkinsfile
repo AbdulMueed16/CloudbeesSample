@@ -1,18 +1,22 @@
 pipeline {
-    
     agent any
 
-    stages {
+    tools {
+        // This must match the 'Name' you gave Maven in 
+        // Jenkins -> Manage Jenkins -> Global Tool Configuration
+        maven 'Maven 3.9.10' 
+    }
 
+    stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/AbdulMueed16/CloudbeesSample.git'
+                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn -B clean package'
             }
         }
 
@@ -24,8 +28,9 @@ pipeline {
 
         stage('Archive') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar'
+               archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
     }
+     
 }
